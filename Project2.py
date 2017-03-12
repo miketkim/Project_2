@@ -102,29 +102,25 @@ for each_page in strings_of_html:
 ## Behavior: See instructions. Should search for the input string on twitter and get results. Should check for cached data, use it if possible, and if not, cache the data retrieved.
 ## RETURN VALUE: A list of strings: A list of just the text of 5 different tweets that result from the search.
 
-def get_five_tweets(anyString):
-	newKey = "twitter_" + anyString
+def get_five_tweets(search):
+	newKey = "twitter_" + search
 	if newKey in CACHE_DICTION: 
 		results = CACHE_DICTION[newKey] 
 	else:
-		results = api.search(q=anyString) 
+		results = api.search(q=search) 
 		CACHE_DICTION[newKey] = results 
 		f = open(CACHED_FNAME,'w')
 		f.write(json.dumps(CACHE_DICTION)) 
 		f.close()
 	list_of_tweets = results["statuses"]
-	fiveTweets = []
-	i = 0
-	while i < 5:
-		fiveTweets.append(str(list_of_tweets[i]["text"].encode('utf-8')))
-		i += 1
-	return fiveTweets
+	topfive = []
+	for x in list_of_tweets[:5]:
+		topfive.append(str(x["text"]))
+	return topfive
 
 
 ## PART 3 (b) - Write one line of code to invoke the get_five_tweets function with the phrase "University of Michigan" and save the result in a variable five_tweets.
 five_tweets = get_five_tweets("University of Michigan")
-
-
 
 ## PART 3 (c) - Iterate over the five_tweets list, invoke the find_urls function that you defined in Part 1 on each element of the list, and accumulate a new list of each of the total URLs in all five of those tweets in a variable called tweet_urls_found. 
 tweet_urls_found = []
